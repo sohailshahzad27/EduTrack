@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>To‑Do List</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Font Awesome -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <!-- Google Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <!-- Custom CSS for responsive sidebar -->
+  <style>
+    /* Mobile: hide sidebar by default */
+    @media (max-width: 768px) {
+      .sidebar {
+        position: absolute;
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+      }
+      .sidebar.active {
+        transform: translateX(0);
+      }
+      .content.shifted {
+        margin-left: 16rem;
+        transition: margin-left 0.3s ease-in-out;
+      }
+    }
+    /* Desktop: sidebar always visible */
+    @media (min-width: 769px) {
+      .sidebar {
+        transform: translateX(0) !important;
+        position: relative;
+      }
+      .content {
+        margin-left: 16rem;
+      }
+    }
+  </style>
+</head>
+<body class="bg-purple-100">
+  <div class="flex min-h-screen">
+    <!-- Sidebar (same as your other pages) -->
+    <div class="sidebar bg-purple-600 text-white w-64 p-6 rounded-r-3xl transition-transform duration-300 ease-in-out fixed z-20">
+      <div class="flex items-center mb-8">
+        <a href="index.html">
+          <img alt="Home Icon" style="cursor: pointer;" class="w-10 h-10" src="home.svg" />
+        </a>
+        <span class="ml-3 text-xl font-bold">Notes Maker</span>
+      </div>
+      <nav class="space-y-4">
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="dashboard.html">
+          <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="weekly-progress.html">
+          <i class="fas fa-chart-line mr-3"></i>Weekly Progress
+        </a>
+        <a class="flex items-center text-purple-200 text-white bg-purple-700 rounded-xl p-2" href="ToDoList.html">
+          <i class="fas fa-check-double mr-3"></i>To-Do List
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="courses.html">
+          <i class="fas fa-book mr-3"></i>Courses
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="assingments.html">
+          <i class="fas fa-tasks mr-3"></i>Assignments
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="notes-maker.html">
+          <i class="fas fa-sticky-note mr-3"></i>Notes Maker
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="schedule.html">
+          <i class="fas fa-calendar-alt mr-3"></i>Timetable
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="result.html">
+          <i class="fas fa-chart-bar mr-3"></i>Result
+        </a>
+        <a class="logout flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="logout.html">
+          <i class="fas fa-sign-out-alt mr-3"></i>Logout
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8 content transition-all duration-300">
+      <!-- Burger Menu Button-->
+      <button id="burgerButton" class="text-purple-600 focus:outline-none mb-4" onclick="toggleSidebar()">
+        <i class="fas fa-bars text-2xl"></i>
+      </button>
+
+      <div class="flex justify-between items-center mb-8">
+        <div class="relative">
+
+        </div>
+        <div class="flex items-center">
+          <div class="relative mr-4">
+            <button class="hover:text-purple-300 focus:outline-none" onclick="toggleNotifications()">
+              <i class="fas fa-bell text-xl"></i>
+              <span class="notification-badge" id="notificationCount">3</span>
+            </button>
+            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-md shadow-xl overflow-hidden z-50">
+              <div class="py-2">
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 text-sm">Lecture 9 of CS Uploaded</a>
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 text-sm">Quiz for Database is live</a>
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 text-sm">Assignment 2 Deadline Approaching</a>
+              </div>
+            </div>
+          </div>
+          <a href="profile.html">
+            <img alt="User profile picture" class="w-10 h-10 rounded-full mr-3"
+              src="profile.svg" />
+          </a>
+          <div>
+            <div class="font-bold" id="studentName">USER 101</div>
+            <div class="text-sm text-gray-500" id="studentYear">3rd year</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- To-Do List Section -->
+      <div class="bg-white p-6 rounded-lg shadow mb-6">
+        <h1 class="text-3xl font-bold mb-4">My To‑Do List</h1>
+        <div id="todoApp" class="space-y-4">
+          <div class="flex flex-col md:flex-row md:items-center">
+            <input type="text" id="todoInput" placeholder="Add a new task..." class="flex-1 p-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-purple-500" />
+            <button id="addTodoBtn" class="mt-2 md:mt-0 md:ml-4 bg-green-500 text-white px-6 py-3 rounded-lg hover:bg-green-600 transition-colors duration-200">
+              <i class="fas fa-plus mr-2"></i>Add Task
+            </button>
+          </div>
+          <ul id="todoList" class="space-y-3"></ul>
+        </div>
+      </div>
+    </div>
+  </div>
+  
+  <script src="script.js"></script>
+</body>
+</html>

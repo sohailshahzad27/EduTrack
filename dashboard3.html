@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta content="width=device-width, initial-scale=1.0" name="viewport" />
+  <title>Dashboard</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css">
+  <style>
+    /* Dashboard specific styles */
+    .dashboard-card {
+      background-color: #ffffff;
+      border-radius: 1.25rem;
+      padding: 1.5rem;
+      box-shadow: 0 5px 15px rgba(0, 0, 0, 0.05);
+    }
+    .dashboard-card-title {
+      font-size: 1.5rem;
+      font-weight: bold;
+      margin-bottom: 1rem;
+      color: #4A3AFF; /* Purple Accent */
+    }
+    .quick-links-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+      gap: 1rem;
+    }
+    .quick-link-item {
+      background-color: #ede9fe; /* Light Purple */
+      color: #4A3AFF; /* Purple Accent */
+      padding: 1rem;
+      border-radius: 0.75rem;
+      text-align: center;
+      transition: background-color 0.3s ease, transform 0.3s ease;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+    }
+    .quick-link-item:hover {
+      background-color: #d8b4fe; /* Slightly Darker Purple */
+      transform: scale(1.05);
+    }
+    .quick-link-item i {
+      font-size: 2rem;
+      margin-bottom: 0.5rem;
+    }
+
+    /* Assignment Completion Chart Styles */
+    .assignment-chart-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: column;
+    }
+    .circular-chart {
+      width: 150px;
+      height: 150px;
+      position: relative;
+      margin-bottom: 1rem;
+    }
+    /* Background circle */
+    .chart-circle-background {
+      fill: none;
+      stroke-width: 10;
+      stroke: #e2e8f0; /* Light gray background circle */
+      stroke-linecap: round;
+    }
+    /* Arcs for each segment */
+    .chart-arc {
+      fill: none;
+      stroke-width: 10;
+      stroke-linecap: round;
+      stroke-dasharray: 0 100; /* updated dynamically */
+      transition: stroke-dashoffset 0.6s ease, stroke-dasharray 0.6s ease;
+    }
+    .chart-circle-pending {
+      stroke: #9F7AEA; /* Purple for Pending */
+    }
+    .chart-circle-inprogress {
+      stroke: #F6E05E; /* Yellow for In Progress */
+    }
+    .chart-circle-completed {
+      stroke: #48BB78; /* Green for Completed */
+    }
+    .percentage-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1.2rem;
+      font-weight: bold;
+      color: #374151;
+    }
+    .status-labels {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      margin-top: 0.5rem;
+    }
+    .status-label {
+      font-size: 0.9rem;
+      display: flex;
+      align-items: center;
+    }
+    .status-label span {
+      display: inline-block;
+      width: 0.75rem;
+      height: 0.75rem;
+      border-radius: 50%;
+      margin-right: 0.5rem;
+    }
+    .status-label-green span {
+      background-color: #48BB78; /* Green */
+    }
+    .status-label-yellow span {
+      background-color: #F6E05E; /* Yellow */
+    }
+    .status-label-purple span {
+      background-color: #9F7AEA; /* Purple */
+    }
+  </style>
+</head>
+
+<body class="bg-purple-100">
+  <div class="flex min-h-screen">
+    <!-- Sidebar -->
+    <div class="sidebar bg-purple-600 text-white w-64 p-6 rounded-r-3xl transition-transform duration-300 ease-in-out">
+      <div class="flex items-center mb-8">
+        <a href="index.html"><img alt="Home Icon" style="cursor: pointer;" class="w-10 h-10" src="home.svg" /></a>
+        <span class="ml-3 text-xl font-bold">Dashboard</span>
+      </div>
+      <nav class="space-y-4">
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="dashboard.html">
+          <i class="fas fa-tachometer-alt mr-3"></i>Dashboard
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="weekly-progress.html">
+          <i class="fas fa-chart-line mr-3"></i>Weekly Progress
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="ToDoList.html">
+          <i class="fas fa-check-double mr-3"></i>To-Do List
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="courses.html">
+          <i class="fas fa-book mr-3"></i>Courses
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="assignments.html">
+          <i class="fas fa-tasks mr-3"></i>Assignments
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="notes-maker.html">
+          <i class="fas fa-sticky-note mr-3"></i>Notes Maker
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="schedule.html">
+          <i class="fas fa-calendar-alt mr-3"></i>Timetable
+        </a>
+        <a class="flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="result.html">
+          <i class="fas fa-chart-bar mr-3"></i>Result
+        </a>
+        <a class="logout flex items-center text-purple-200 hover:text-white hover:bg-purple-700 rounded-xl p-2" href="logout.html">
+          <i class="fas fa-sign-out-alt mr-3"></i>Logout
+        </a>
+      </nav>
+    </div>
+
+    <!-- Main Content -->
+    <div class="flex-1 p-8 content">
+      <div class="flex justify-between items-center mb-8">
+        <div class="relative">
+          <input class="bg-white rounded-full py-2 px-4 shadow-md w-64" placeholder="Search" type="text" />
+        </div>
+        <div class="flex items-center">
+          <div class="relative mr-4">
+            <button class="hover:text-purple-300 focus:outline-none" onclick="toggleNotifications()">
+              <i class="fas fa-bell text-xl"></i>
+              <span class="notification-badge" id="notificationCount">3</span>
+            </button>
+            <div id="notificationDropdown" class="hidden absolute right-0 mt-2 w-72 bg-white rounded-md shadow-xl overflow-hidden z-50">
+              <div class="py-2">
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 text-sm">Lecture 9 of CS Uploaded</a>
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 text-sm">Quiz for Database is live</a>
+                <a href="#" class="block px-4 py-2 text-gray-800 hover:bg-gray-100 text-sm">Assignment 2 Deadline Approaching</a>
+              </div>
+            </div>
+          </div>
+          <a href="profile.html">
+            <img alt="User profile picture" class="w-10 h-10 rounded-full mr-3" src="profile.svg" />
+          </a>
+          <div>
+            <div class="font-bold" id="studentName">USER 101</div>
+            <div class="text-sm text-gray-500" id="studentYear">3rd year</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="bg-purple-500 text-white rounded-3xl p-6 mb-8 flex items-center justify-between">
+        <div>
+          <div class="text-sm" id="currentDate"></div>
+          <div class="text-2xl font-bold">Welcome back, <span id="welcomeBannerName">User</span>!</div>
+          <div class="text-sm">Your personalized student dashboard is ready.</div>
+        </div>
+        <img alt="student" class="w-24 h-24" src="profile.svg" />
+      </div>
+
+      <section class="mb-8">
+        <h2 class="dashboard-card-title">Quick Links</h2>
+        <div class="quick-links-grid">
+          <a href="courses.html" class="quick-link-item">
+            <i class="fas fa-book"></i>
+            <p>Courses</p>
+          </a>
+          <a href="assignments.html" class="quick-link-item">
+            <i class="fas fa-tasks"></i>
+            <p>Assignments</p>
+          </a>
+          <a href="schedule.html" class="quick-link-item">
+            <i class="fas fa-calendar-alt"></i>
+            <p>Timetable</p>
+          </a>
+          <a href="notes-maker.html" class="quick-link-item">
+            <i class="fas fa-sticky-note"></i>
+            <p>Notes Maker</p>
+          </a>
+          <a href="weekly-progress.html" class="quick-link-item">
+            <i class="fas fa-chart-line"></i>
+            <p>Progress</p>
+          </a>
+          <a href="ToDoList.html" class="quick-link-item">
+            <i class="fas fa-check-double"></i>
+            <p>To-Do List</p>
+          </a>
+        </div>
+      </section>
+
+      <section class="mb-8">
+        <h2 class="dashboard-card-title">Assignment Completion Overview</h2>
+        <div class="dashboard-card">
+          <div class="assignment-chart-container">
+            <div class="circular-chart">
+              <svg viewBox="0 0 100 100">
+                <!-- Gray background circle -->
+                <circle class="chart-circle-background" cx="50" cy="50" r="45" />
+
+                <!-- Pending arc -->
+                <circle
+                  class="chart-arc chart-circle-pending"
+                  cx="50" cy="50" r="45"
+                  id="pendingArc"
+                  transform="rotate(-90 50 50)" />
+
+                <!-- In-progress arc -->
+                <circle
+                  class="chart-arc chart-circle-inprogress"
+                  cx="50" cy="50" r="45"
+                  id="inProgressArc"
+                  transform="rotate(-90 50 50)" />
+
+                <!-- Completed arc -->
+                <circle
+                  class="chart-arc chart-circle-completed"
+                  cx="50" cy="50" r="45"
+                  id="completedArc"
+                  transform="rotate(-90 50 50)" />
+              </svg>
+              <span class="percentage-text" id="completionPercentageText">0%</span>
+            </div>
+            <div class="status-labels" id="assignmentStatusLabels"></div>
+          </div>
+        </div>
+      </section>
+    </div>
+  </div>
+
+  <script>
+    function toggleNotifications() {
+      document.getElementById('notificationDropdown').classList.toggle('hidden');
+    }
+
+    document.addEventListener('DOMContentLoaded', function () {
+      // Show current date
+      const dateElement = document.getElementById('currentDate');
+      const now = new Date();
+      const options = { weekday: 'long', month: 'long', day: 'numeric', year: 'numeric' };
+      dateElement.textContent = now.toLocaleDateString('en-US', options);
+
+      // arcs
+      const pendingArc = document.getElementById('pendingArc');
+      const inProgressArc = document.getElementById('inProgressArc');
+      const completedArc = document.getElementById('completedArc');
+      const percentageText = document.getElementById('completionPercentageText');
+      const statusLabels = document.getElementById('assignmentStatusLabels');
+
+      // radius 45 => circumference ~ 283
+      const radius = 45;
+      const circumference = 2 * Math.PI * radius;
+
+      function updateAssignmentChart() {
+        // For demonstration, read from localStorage or fallback
+        // E.g., localStorage.setItem('assignments', JSON.stringify([
+        //   {status:'completed'}, {status:'completed'}, {status:'completed'},
+        //   {status:'in-progress'}, {status:'pending'}
+        // ]));
+        const assignments = JSON.parse(localStorage.getItem('assignments') || '[]');
+        
+        const pendingCount = assignments.filter(a => a.status === 'pending').length;
+        const inProgressCount = assignments.filter(a => a.status === 'in-progress').length;
+        const completedCount = assignments.filter(a => a.status === 'completed').length;
+        const total = assignments.length;
+
+        // Percentages
+        const pendingPercent = total ? (pendingCount / total) * 100 : 0;
+        const inProgressPercent = total ? (inProgressCount / total) * 100 : 0;
+        const completedPercent = total ? (completedCount / total) * 100 : 0;
+
+        // Convert to arc lengths
+        const pendingArcLen = (pendingPercent / 100) * circumference;
+        const inProgressArcLen = (inProgressPercent / 100) * circumference;
+        const completedArcLen = (completedPercent / 100) * circumference;
+
+        // Arc 1: Pending
+        // strokeDasharray is total circumference
+        // strokeDashoffset sets how much is "hidden"
+        // Start at offset=0 => arc extends from offset 0 to offset pendingArcLen
+        pendingArc.style.strokeDasharray = circumference;
+        pendingArc.style.strokeDashoffset = circumference - pendingArcLen;
+
+        // Arc 2: In-progress
+        // starts after pendingArcLen, so offset = (circumference - pendingArcLen)
+        // minus inProgressArcLen
+        inProgressArc.style.strokeDasharray = circumference;
+        inProgressArc.style.strokeDashoffset = (circumference - pendingArcLen) - inProgressArcLen;
+
+        // Arc 3: Completed
+        // starts after pendingArcLen + inProgressArcLen
+        completedArc.style.strokeDasharray = circumference;
+        completedArc.style.strokeDashoffset = (circumference - pendingArcLen - inProgressArcLen) - completedArcLen;
+
+        // Show total % in the center
+        const totalPercent = Math.round(pendingPercent + inProgressPercent + completedPercent);
+        percentageText.textContent = totalPercent + "%";
+
+        // Show color-coded labels
+        statusLabels.innerHTML = `
+          <div class="status-label status-label-green">
+            <span></span>Completed: ${completedCount}
+          </div>
+          <div class="status-label status-label-yellow">
+            <span></span>In Progress: ${inProgressCount}
+          </div>
+          <div class="status-label status-label-purple">
+            <span></span>Pending: ${pendingCount}
+          </div>
+        `;
+      }
+
+      // Initialize chart
+      updateAssignmentChart();
+
+      // Animate arcs from zero
+      pendingArc.style.strokeDasharray = circumference;
+      pendingArc.style.strokeDashoffset = circumference;
+      inProgressArc.style.strokeDasharray = circumference;
+      inProgressArc.style.strokeDashoffset = circumference;
+      completedArc.style.strokeDasharray = circumference;
+      completedArc.style.strokeDashoffset = circumference;
+
+      // Trigger chart update after short delay
+      setTimeout(updateAssignmentChart, 200);
+    });
+  </script>
+</body>
+</html>
